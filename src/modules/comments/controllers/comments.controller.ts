@@ -7,8 +7,12 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put
+  Put,
+  UseGuards,
+  Request
 } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { Comment } from "../entities/comment.entity";
 import { CommentsService } from "../services/comments.service";
 
@@ -35,9 +39,14 @@ export class CommentsController {
     return { data: comment };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createComment(@Body() comment: Comment): Promise<IResponseJson<Comment>> {
+  async createComment(
+    @Body() comment: Comment,
+    @Request() req: Request
+  ): Promise<IResponseJson<Comment>> {
+    console.log(req);
     const commentNew = await this.commentService.create(comment);
     return {
       data: commentNew,

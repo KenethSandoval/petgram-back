@@ -40,10 +40,10 @@ export class AuthService {
 
   async register(data: CreateUserDto): Promise<IResponseToken | string | unknown> {
     const user = (await this.userService.create(data)) as User;
-		if (user.name) {
+    if (user.name) {
       return this.generateJWT(user);
     } else {
-			return new BadRequestException("The user already exists").getResponse();
-		}
-	}
+      return new BadRequestException("The user already exists").getResponse();
+    }
+  }
 }
